@@ -13,11 +13,13 @@
         android:text="voice Search"
         android:id="@+id/btnVoice"
         android:textSize="30dp"/>
+
     <EditText
+        android:id="@+id/etText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etText"
-        android:textSize="30dp"/>
+        android:textSize="30dp" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
