@@ -14,15 +14,13 @@ import android.view.ViewGroup;
 public class Fragment1 extends Fragment{
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView=(ViewGroup)inflater.inflate(R.layout.fragment1,container,false);
-
+        final ViewGroup rootView=(ViewGroup)inflater.inflate(R.layout.fragment1,container,false);
         return rootView;
     }
+
 
 
 }
