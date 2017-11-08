@@ -26,9 +26,6 @@
         android:text="text Search"
         android:id="@+id/btnText"
         android:textSize="30dp"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+
 
 </LinearLayout>
