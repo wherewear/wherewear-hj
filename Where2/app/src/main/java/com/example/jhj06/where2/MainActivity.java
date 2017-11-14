@@ -1,5 +1,6 @@
 package com.example.jhj06.where2;
 
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +16,16 @@ import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 
+import java.io.IOException;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText et;
     Button btnVoice, btnText;
     RelativeLayout container;
     TMapView tMapView;
-    //출발지 초기화 수유역
+
     TMapPoint startPoint=new TMapPoint(37.651445,127.016160);
     TMapPoint destPoint=new TMapPoint(37.637696,127.024636);
 
@@ -37,8 +41,17 @@ public class MainActivity extends AppCompatActivity {
 
         tmapdata=new TMapData();
 
-        et=(EditText)findViewById(R.id.etText);
+        et=(EditText)findViewById(R.id.etText);//시
+
+
         btnText=(Button)findViewById(R.id.btnText);
+        btnText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TMapPoint map=translatePoint("삼양로144길 19-7");
+                et.setText(map.getLongitude()+", "+map.getLatitude());
+            }
+        });
         btnVoice=(Button)findViewById(R.id.btnVoice);
 
         container=(RelativeLayout) findViewById(R.id.container);
@@ -54,21 +67,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"333333333333333",Toast.LENGTH_LONG).show();
-
-
                 tmapdata.findPathData(startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
                     @Override
                     public void onFindPathData(TMapPolyLine tMapPolyLine) {
-
                         tMapPolyLine.setLineWidth(10);
                         tMapView.addTMapPath(tMapPolyLine);
                     }
                 });
-
-                Toast.makeText(getApplicationContext(),"11111111111111",Toast.LENGTH_LONG).show();
-
             }
         });
+
         container.addView(tMapView);
     }
     public void initTMapView(){
@@ -91,5 +99,30 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    //주소->좌표로 변환해 반환
+    public TMapPoint translatePoint(String address){
+        TMapPoint tmap=null;
+        List<Address> list=null;
+        Geocoder geocoder=new Geocoder(getApplication());
+        try{
+            list=geocoder.getFromLocationName(address,10);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        if(list!=null){
+            if(list.size()==0) {
+                Toast.makeText(getApplicationContext(), "해당주소정보없음", Toast.LENGTH_LONG).show();
+            }else{
+                Address addr=list.get(0);
+                double lat = addr.getLatitude();
+                double lon = addr.getLongitude();
+
+                tmap=new TMapPoint(lon,lat);
+            }
+        }
+
+        return  tmap;
+    }
+
 
 }
