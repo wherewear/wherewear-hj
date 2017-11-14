@@ -1,7 +1,9 @@
 package com.example.jhj06.where2;
 
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,10 +22,11 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout container;
     TMapView tMapView;
     //출발지 초기화 수유역
-    TMapPoint startPoint;
-    //목적지 초기화 덕성여대
-    TMapPoint destPoint;
+    TMapPoint startPoint=new TMapPoint(37.651445,127.016160);
+    TMapPoint destPoint=new TMapPoint(37.637696,127.024636);
+
     TMapData tmapdata;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        startPoint=new TMapPoint(127.016160,37.651445);
-        destPoint=new TMapPoint( 127.024690,37.637101);
+
         tmapdata=new TMapData();
 
         et=(EditText)findViewById(R.id.etText);
@@ -45,20 +47,26 @@ public class MainActivity extends AppCompatActivity {
 
         initTMapView();
 
+        Geocoder geocoder=new Geocoder(getApplicationContext());
+
         btnVoice.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"333333333333333",Toast.LENGTH_LONG).show();
+
+
                 tmapdata.findPathData(startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
                     @Override
                     public void onFindPathData(TMapPolyLine tMapPolyLine) {
-                        Toast.makeText(getApplicationContext(),"333333333333333",Toast.LENGTH_LONG).show();
 
+                        tMapPolyLine.setLineWidth(10);
                         tMapView.addTMapPath(tMapPolyLine);
                     }
                 });
-                //   drawPathPolyLine();
+
                 Toast.makeText(getApplicationContext(),"11111111111111",Toast.LENGTH_LONG).show();
-                //tMapView.refreshMap();
+
             }
         });
         container.addView(tMapView);
@@ -66,34 +74,22 @@ public class MainActivity extends AppCompatActivity {
     public void initTMapView(){
         //키값
         tMapView.setSKPMapApiKey("2d662269-193b-3f0d-8c35-fde796e55dbf");
-//        tMapView.setCompassMode(true);
-//        tMapView.setIconVisibility(true);
-//        tMapView.setZoomLevel(20);
-        //tMapView.setCenterPoint(startPoint.getLongitude(),startPoint.getLatitude());
-        tMapView.setCenterPoint(127.016160,37.651445);
-       // tMapView.setLocationPoint(127.016160,37.651445);
 
-//        tMapView.setTrackingMode(true);
-//        tMapView.setSightVisible(true);
+       tMapView.setCenterPoint(127.016160,37.651445);
+
+        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
+            @Override
+            public void SKPMapApikeySucceed() {
+                Log.d("map auth","success");
+            }
+
+            @Override
+            public void SKPMapApikeyFailed(String s) {
+                Log.d("Map Auth",s);
+            }
+        });
+
 
     }
-//    void drawPathPolyLine(){
-//
-//
-//        Toast.makeText(getApplicationContext(),"22222222222222",Toast.LENGTH_LONG).show();
-//
-////        //출발지-도착지 경로
-//        TMapPolyLine polyline=null;
-//
-//            tmapdata.findPathData(startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
-//                @Override
-//                public void onFindPathData(TMapPolyLine tMapPolyLine) {
-//                    Toast.makeText(getApplicationContext(),"333333333333333",Toast.LENGTH_LONG).show();
-//
-//                    tMapView.addTMapPath(tMapPolyLine);
-//                }
-//            });
-//
-//
-//    }
+
 }
